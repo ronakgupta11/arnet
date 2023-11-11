@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { maxMessageLength, abbreviateAddress, getPostTime } from '../lib/api';
+import { maxMessageLength, abbreviateAddress, getPostTime,Base64Image } from '../lib/api';
 
 export const Posts = (props) => {
   return (
@@ -90,6 +90,9 @@ const PostItem = (props) => {
           <div className="postRow">
 
             {props.postInfo.message || postMessage}
+            {/* <img src={props.postInfo.request.data}/> */}
+            <Base64Image imageData={props.postInfo.request.data} alt={""} />
+            {console.log(props.postInfo.request)}
             {statusMessage && <div className="status"> {statusMessage}</div>}
           </div>
         </div>

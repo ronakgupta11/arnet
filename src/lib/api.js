@@ -27,11 +27,10 @@ export const createPostInfo = (node) => {
     request:null,
   }
   if (postInfo.length >= 0) {
-    postInfo.request  = arweave.api.get(`/${node.id}`, { timeout: 10000 }).then(
+    const res  = arweave.api.get(`/${node.id}`, { timeout: 10000 }).then(
       v =>{
         console.log(v)
-
-
+        postInfo.request = v
       }
     ).catch(() => { postInfo.error = 'timeout loading data' });
     // console.log(res)
@@ -44,7 +43,13 @@ export const createPostInfo = (node) => {
 
 export const buildQuery = () => {
   const queryObject = { query: `{
-    transactions(first: 100,
+    transactions(first: 10,
+      tags:[
+        {
+          name:"Content-type",
+          values:["image/png"]
+        }
+      ]
       
     ) {
       edges {
@@ -128,4 +133,24 @@ export const delayResults = (milliseconds, results) => {
   return delay(milliseconds).then(function() {
     return results;
   });
+}
+
+export function Base64Image({ imageData, alt }) {
+  // Decode base64 data
+  const decodedData = atob(imageData);
+
+  // Create a Blob from the decoded data
+  const arrayBuffer = new ArrayBuffer(decodedData.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < decodedData.length; i++) {
+    uint8Array[i] = decodedData.charCodeAt(i);
+  }
+
+  const blob = new Blob([arrayBuffer]);
+
+  // Create a data URL from the Blob
+  const imageUrl = URL.createObjectURL(blob);
+
+  return <img src={imageUrl} alt={alt} />;
 }
